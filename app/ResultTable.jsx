@@ -153,13 +153,13 @@ class ResultTable extends React.Component {
     const dynamicVariables = data.changedContent.match(regex);
     let content = data.changedContent;
     const dynamicError = [];
-    if (data.previewValues && dynamicVariables) {
+    if (dynamicVariables) {
       dynamicVariables.forEach(dynamicVariable => {
         const matchedString = dynamicVariable.substring(
           2,
           dynamicVariable.length - 1
         );
-        if (data.previewValues[matchedString]) {
+        if (data.variableMap && data.variableMap[matchedString]) {
           content = content.replace(
             dynamicVariable,
             `<span th:remove="tag" th:text="${dynamicVariable}">${dynamicVariable}</span>`
