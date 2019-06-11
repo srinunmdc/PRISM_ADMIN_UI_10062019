@@ -5,6 +5,7 @@ import { observer, inject } from "mobx-react";
 import Thead from "./table-head";
 import sort from "./util/sort";
 import addSpans from "./util/addSpans";
+import innerTextOfSpans from "./util/innerTextOfSpans";
 import EditorTabs from "./editor/EditorTabs";
 import AlertTemplateResourceStore from "./store/AlertTemplateStore";
 import AlertTemplateService from "./service/AlertTemplateService";
@@ -152,22 +153,17 @@ class ResultTable extends React.Component {
     data.changedContent = addSpans(data.changedContent);
     // const regex = /\${\w*\}/g;
 
-    const regex = /\${[^$]*\}/g;
-    const dynamicVariables = data.changedContent.match(regex);
     let content = data.changedContent;
     const dynamicError = [];
+    const regex = /\${[^$]*\}/g;
+    const dynamicVariables = innerTextOfSpans(data.changedContent).match(regex);
     if (dynamicVariables) {
       dynamicVariables.forEach(dynamicVariable => {
         const matchedString = dynamicVariable.substring(
           2,
           dynamicVariable.length - 1
         );
-        if (data.variableMap && data.variableMap[matchedString]) {
-          // content = content.replace(
-          //   dynamicVariable,
-          //   `<span th:remove="tag" th:text="${dynamicVariable}">${dynamicVariable}</span>`
-          // );
-        } else {
+        if (!data.variableMap || !data.variableMap[matchedString]) {
           error = true;
           dynamicError.push(dynamicVariable);
           this.setState({
