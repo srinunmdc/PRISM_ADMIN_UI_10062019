@@ -4,6 +4,7 @@ import { observer, inject } from "mobx-react";
 
 import Thead from "./table-head";
 import sort from "./util/sort";
+import addSpans from "./util/addSpans";
 import EditorTabs from "./editor/EditorTabs";
 import AlertTemplateResourceStore from "./store/AlertTemplateStore";
 import AlertTemplateService from "./service/AlertTemplateService";
@@ -76,7 +77,7 @@ class ResultTable extends React.Component {
     });
     const edit = editMode;
     edit[activeTab] = false;
-    data.state = undefined;
+    // data.state = undefined;
     this.setState({
       editMode: { ...edit }
     });
@@ -148,7 +149,9 @@ class ResultTable extends React.Component {
         data = element;
       }
     });
+    data.changedContent = addSpans(data.changedContent);
     // const regex = /\${\w*\}/g;
+
     const regex = /\${[^$]*\}/g;
     const dynamicVariables = data.changedContent.match(regex);
     let content = data.changedContent;
@@ -160,10 +163,10 @@ class ResultTable extends React.Component {
           dynamicVariable.length - 1
         );
         if (data.variableMap && data.variableMap[matchedString]) {
-          content = content.replace(
-            dynamicVariable,
-            `<span th:remove="tag" th:text="${dynamicVariable}">${dynamicVariable}</span>`
-          );
+          // content = content.replace(
+          //   dynamicVariable,
+          //   `<span th:remove="tag" th:text="${dynamicVariable}">${dynamicVariable}</span>`
+          // );
         } else {
           error = true;
           dynamicError.push(dynamicVariable);
@@ -178,7 +181,7 @@ class ResultTable extends React.Component {
     }
     if (!error) {
       data.templateContent = content;
-      data.state = "DRAFT";
+      // data.state = "DRAFT";
       AlertTemplateService.saveTemplate(data);
       this.setState({
         edited: { ...edited, [activeTab]: false },
@@ -221,13 +224,13 @@ class ResultTable extends React.Component {
         data = element;
       }
     });
-    data.state = "PUBLISHED";
+    // data.state = "PUBLISHED";
     this.setState({
       edited: { ...edited, [activeTab]: false },
       editMode: { ...editMode, [activeTab]: false }
     });
     AlertTemplateService.publishTemplate(data);
-    data.state = undefined;
+    // data.state = undefined;
   };
 
   onCancel = () => {
