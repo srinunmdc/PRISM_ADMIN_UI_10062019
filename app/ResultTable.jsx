@@ -151,19 +151,18 @@ class ResultTable extends React.Component {
     });
     data.changedContent = addSpans(data.changedContent);
     // const regex = /\${\w*\}/g;
-    
+
     const regex = /\${[^$]*\}/g;
     const dynamicVariables = data.changedContent.match(regex);
     let content = data.changedContent;
     const dynamicError = [];
-    debugger;
-    if (data.previewValues && dynamicVariables) {
+    if (dynamicVariables) {
       dynamicVariables.forEach(dynamicVariable => {
         const matchedString = dynamicVariable.substring(
           2,
           dynamicVariable.length - 1
         );
-        if (data.previewValues[matchedString]) {
+        if (data.variableMap && data.variableMap[matchedString]) {
           // content = content.replace(
           //   dynamicVariable,
           //   `<span th:remove="tag" th:text="${dynamicVariable}">${dynamicVariable}</span>`

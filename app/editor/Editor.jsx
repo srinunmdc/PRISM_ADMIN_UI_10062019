@@ -99,7 +99,7 @@ class Editor extends React.Component {
                   dangerouslySetInnerHTML={{
                     __html: replaceDynamicVariable(
                       data.changedContent,
-                      data.previewValues
+                      data.variableMap
                     )
                   }}
                 />
