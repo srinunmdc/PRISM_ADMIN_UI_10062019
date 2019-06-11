@@ -150,6 +150,7 @@ class ResultTable extends React.Component {
         data = element;
       }
     });
+    data.changedContent = data.changedContent.replace(/(\<\/span\>&nbsp;)/g,"</span>")
     data.changedContent = addSpans(data.changedContent);
     // const regex = /\${\w*\}/g;
 
