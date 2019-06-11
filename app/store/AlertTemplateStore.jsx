@@ -48,7 +48,7 @@ class AlertTemplateStore {
 
   processData = data => {
     return data.map(item => {
-      item.templateContent = item.templateContent=item.templateContent.replace(/(\<\/span\>(?!&nbsp;))/g,"</span>&nbsp;")
+      item.templateContent =item.templateContent.replace(/(\<\/span\>(?!&nbsp;))/g,"</span>&nbsp;")
       return { ...item, changedContent: item.templateContent };
     });
   };
