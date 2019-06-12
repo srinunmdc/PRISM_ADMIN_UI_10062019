@@ -23,7 +23,7 @@ const replaceDynamicVariable = (data, dynamicData) => {
     return data;
   }
   data = data.replace(/(\<\/span\>&nbsp;)/g,"</span>")
-  const regex = /\${[^$]*\}/g;
+  const regex = /\${[^$]*?\}/g;
   const dynamicVariables = data.match(regex);
   if (dynamicVariables) {
     dynamicVariables.forEach(dynamicVariable => {

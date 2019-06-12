@@ -204,7 +204,7 @@ class ResultTable extends React.Component {
 
     let content = data.changedContent;
     const dynamicError = [];
-    const regex = /\${[^$]*\}/g;
+    const regex = /\${[^$]*?\}/g;
     const dynamicVariables = innerTextOfSpans(data.changedContent).match(regex);
     if (dynamicVariables) {
       dynamicVariables.forEach(dynamicVariable => {
