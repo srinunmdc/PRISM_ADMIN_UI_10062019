@@ -13,6 +13,7 @@ class Editor extends React.Component {
     const {
       data,
       editMode,
+      onChangeSource,
       onChange,
       activeTab,
       edited,
@@ -76,6 +77,7 @@ class Editor extends React.Component {
                 activeClass="p10"
                 content={data.changedContent}
                 events={{
+                  mode: onChangeSource,
                   change: onChange
                 }}
                 config={{
@@ -129,7 +131,7 @@ class Editor extends React.Component {
 Editor.propTypes = {
   data: PropTypes.object.isRequired,
   editMode: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChangeSource: PropTypes.func.isRequired
 };
 
 export default Editor;

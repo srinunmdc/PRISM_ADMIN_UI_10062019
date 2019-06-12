@@ -18,6 +18,7 @@ class EditorTabs extends React.Component {
       edited,
       alertTemplateStore,
       onChange,
+      onChangeSource,
       onPublish,
       onReject,
       onDraft,
@@ -54,6 +55,7 @@ class EditorTabs extends React.Component {
               <Editor
                 data={element}
                 editMode={editMode}
+                onChangeSource={onChangeSource}
                 onChange={onChange}
                 activeTab={activeTab}
                 edited={edited}

@@ -78,7 +78,7 @@ class ResultTable extends React.Component {
     });
     const edit = editMode;
     edit[activeTab] = false;
-    // data.state = undefined;
+    data.state = undefined;
     this.setState({
       editMode: { ...edit }
     });
@@ -139,6 +139,54 @@ class ResultTable extends React.Component {
     // AlertTemplateResourceStore.updateTemplateResource(this.props.data)
   };
 
+  onChangeSource = evt => {
+    // evt.data.$.target.value [evt.sender.editor.mode === "source"]
+    // evt.data.$.target.innerHTML [evt.sender.editor.mode === "wysiwyg"]
+    const { alertTemplateStore } = this.props;
+    const activeTab = alertTemplateStore.templateContentTypes.selected;
+    let data;
+    alertTemplateStore.alertTemplates.forEach(element => {
+      if (element.templateContentType === activeTab) {
+        data = element;
+      }
+    });
+    const { edited } = this.state;
+    this.setState({
+      edited: { ...edited, [activeTab]: true }
+    });
+    if (data.templateContentType === "EMAIL_BODY") {
+      // data.changedContent = evt.editor.getData();
+      if (evt.sender.editor.mode === "source") {
+        data.changedContent = evt.data.$.target.value;
+      } else {
+        data.changedContent = evt.data.$.target.innerHTML;
+      }
+    } else {
+      if (evt.sender.editor.mode === "source") {
+        data.changedContent = evt.data.$.target.value
+          .replace("<p>", "")
+          .replace("</p>", "");
+      } else {
+        data.changedContent = evt.data.$.target.innerHTML
+          .replace("<p>", "")
+          .replace("</p>", "");
+      }
+      // data.changedContent = evt.editor
+      //   .getData()
+      //   .replace("<p>", "")
+      //   .replace("</p>", ""); // evt.editor.document.getBody().getText();
+      /* // For PUSH, SMS and MAIL_SUBJECT content should be plain and thymeleaf tags are in html, logic to handle the CKEditor formating
+    var dynamicParams = newContent.match(/\$\{([^}]+)\}/gmi);
+    var i;
+    for (i=0;i<dynamicParams.length;i++) {
+    // var field = dynamicParams[i].substring(2, dynamicParams[i].length-1)
+    newContent = newContent.replace(dynamicParams[i], '<span th:text="'+dynamicParams[i]+'">'+dynamicParams[i]+'<span>');
+    } */
+    }
+    // this.props.data.changed = true;
+    // AlertTemplateResourceStore.updateTemplateResource(this.props.data)
+  };
+
   onDraft = () => {
     const { alertTemplateStore } = this.props;
     const { edited, wrongDynamicVariables, showAlert } = this.state;
@@ -178,7 +226,7 @@ class ResultTable extends React.Component {
     }
     if (!error) {
       data.templateContent = content;
-      // data.state = "DRAFT";
+      data.state = "DRAFT";
       AlertTemplateService.saveTemplate(data);
       this.setState({
         edited: { ...edited, [activeTab]: false },
@@ -221,13 +269,13 @@ class ResultTable extends React.Component {
         data = element;
       }
     });
-    // data.state = "PUBLISHED";
+    data.state = "PUBLISHED";
     this.setState({
       edited: { ...edited, [activeTab]: false },
       editMode: { ...editMode, [activeTab]: false }
     });
     AlertTemplateService.publishTemplate(data);
-    // data.state = undefined;
+    data.state = undefined;
   };
 
   onCancel = () => {
@@ -325,6 +373,7 @@ class ResultTable extends React.Component {
                 <EditorTabs
                   editMode={editMode}
                   edited={edited}
+                  onChangeSource={this.onChangeSource}
                   onChange={this.onChange}
                   onPublish={this.onPublish}
                   onReject={this.onReject}
