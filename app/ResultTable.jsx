@@ -106,7 +106,38 @@ class ResultTable extends React.Component {
   };
 
   onChange = evt => {
-    console.log(evt);
+    const { alertTemplateStore } = this.props;
+    const activeTab = alertTemplateStore.templateContentTypes.selected;
+    let data;
+    alertTemplateStore.alertTemplates.forEach(element => {
+      if (element.templateContentType === activeTab) {
+        data = element;
+      }
+    });
+    const { edited } = this.state;
+    this.setState({
+      edited: { ...edited, [activeTab]: true }
+    });
+    if (data.templateContentType === "EMAIL_BODY") {
+      data.changedContent = evt.editor.getData();
+    } else {
+      data.changedContent = evt.editor
+        .getData()
+        .replace("<p>", "")
+        .replace("</p>", ""); // evt.editor.document.getBody().getText();
+      /* // For PUSH, SMS and MAIL_SUBJECT content should be plain and thymeleaf tags are in html, logic to handle the CKEditor formating
+    var dynamicParams = newContent.match(/\$\{([^}]+)\}/gmi);
+    var i;
+    for (i=0;i<dynamicParams.length;i++) {
+    // var field = dynamicParams[i].substring(2, dynamicParams[i].length-1)
+    newContent = newContent.replace(dynamicParams[i], '<span th:text="'+dynamicParams[i]+'">'+dynamicParams[i]+'<span>');
+    } */
+    }
+    // this.props.data.changed = true;
+    // AlertTemplateResourceStore.updateTemplateResource(this.props.data)
+  };
+
+  onChangeSource = evt => {
     // evt.data.$.target.value [evt.sender.editor.mode === "source"]
     // evt.data.$.target.innerHTML [evt.sender.editor.mode === "wysiwyg"]
     const { alertTemplateStore } = this.props;
@@ -342,6 +373,7 @@ class ResultTable extends React.Component {
                 <EditorTabs
                   editMode={editMode}
                   edited={edited}
+                  onChangeSource={this.onChangeSource}
                   onChange={this.onChange}
                   onPublish={this.onPublish}
                   onReject={this.onReject}

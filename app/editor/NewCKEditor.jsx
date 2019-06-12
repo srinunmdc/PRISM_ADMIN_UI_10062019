@@ -63,9 +63,8 @@ class CKEditor extends React.Component {
       window.CKEDITOR.plugins.add("dragFields", {
         init(editor) {
           editor.on("paste", function(evt) {
-            let content = evt.data.dataTransfer.getData("text");
-            evt.data.dataValue =
-              `<span th:text="${  content  }">\${${  content  }}<span>`;
+            const content = evt.data.dataTransfer.getData("text");
+            evt.data.dataValue = `<span th:text="${content}">\${${content}}<span>`;
           });
         }
       });
@@ -86,14 +85,18 @@ class CKEditor extends React.Component {
       // const eventHandler = this.props.events[event];
       // this.editorInstance.on(event, eventHandler);
       const { events } = this.props;
-      const editorInstance = this.editorInstance;
-      editorInstance.on(event, function() {
-        const eventHandler = events[event];
-       //  if (this.mode === 'source') {
-            var editable = editorInstance.editable();
-            editable.attachListener(editable, 'input', eventHandler);
-        //}
-    });
+      const {editorInstance} = this;
+      if (event == "mode") {
+        editorInstance.on(event, function() {
+          const eventHandler = events[event];
+          let editable = editorInstance.editable();
+          if (this.mode === "source") {
+            editable.attachListener(editable, "input", eventHandler);
+          }
+        });
+      } else {
+        editorInstance.on(event, events[event]);
+      }
     }
     loaderStore.loadingComplete();
   }
