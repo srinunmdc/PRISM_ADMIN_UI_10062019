@@ -83,8 +83,17 @@ class CKEditor extends React.Component {
 
     // Register listener for custom events if any
     for (const event in this.props.events) {
-      const eventHandler = this.props.events[event];
-      this.editorInstance.on(event, eventHandler);
+      // const eventHandler = this.props.events[event];
+      // this.editorInstance.on(event, eventHandler);
+      const { events } = this.props;
+      const editorInstance = this.editorInstance;
+      editorInstance.on(event, function() {
+        const eventHandler = events[event];
+       //  if (this.mode === 'source') {
+            var editable = editorInstance.editable();
+            editable.attachListener(editable, 'input', eventHandler);
+        //}
+    });
     }
     loaderStore.loadingComplete();
   }

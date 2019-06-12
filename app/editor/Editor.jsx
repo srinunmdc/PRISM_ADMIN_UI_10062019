@@ -76,7 +76,7 @@ class Editor extends React.Component {
                 activeClass="p10"
                 content={data.changedContent}
                 events={{
-                  change: onChange
+                  mode: onChange
                 }}
                 config={{
                   language: data.locale,
