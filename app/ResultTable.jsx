@@ -78,7 +78,7 @@ class ResultTable extends React.Component {
     });
     const edit = editMode;
     edit[activeTab] = false;
-    data.state = undefined;
+    //data.state = undefined;
     this.setState({
       editMode: { ...edit }
     });
@@ -198,7 +198,7 @@ class ResultTable extends React.Component {
         data = element;
       }
     });
-    data.changedContent = data.changedContent.replace(/(\<\/span\>&nbsp;)/g,"</span>")
+    data.changedContent = data.changedContent.replace(/(&zwnj;)/g,"")
     data.changedContent = addSpans(data.changedContent);
     // const regex = /\${\w*\}/g;
 
@@ -226,7 +226,7 @@ class ResultTable extends React.Component {
     }
     if (!error) {
       data.templateContent = content;
-      data.state = "DRAFT";
+      //data.state = "DRAFT";
       AlertTemplateService.saveTemplate(data);
       this.setState({
         edited: { ...edited, [activeTab]: false },
@@ -269,13 +269,13 @@ class ResultTable extends React.Component {
         data = element;
       }
     });
-    data.state = "PUBLISHED";
+    //data.state = "PUBLISHED";
     this.setState({
       edited: { ...edited, [activeTab]: false },
       editMode: { ...editMode, [activeTab]: false }
     });
     AlertTemplateService.publishTemplate(data);
-    data.state = undefined;
+    //data.state = undefined;
   };
 
   onCancel = () => {
